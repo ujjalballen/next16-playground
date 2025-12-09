@@ -1,9 +1,7 @@
-export default function AboutPage(){
-
-
-    return(
-        <div>
-            This is a about page
-        </div>
-    )
+export default function AboutPage() {
+  return (
+    <div>
+        about
+    </div>
+  );
 }
