@@ -20,6 +20,14 @@ export default function LessonPage() {
           <li>(...)folderName</li>
         </ul>
       </div>
+
+      <div className="border-2 border-amber-400 p-5">
+        <h1 className="text-2xl border-b pb-1">Parallel Routes and Slots</h1>
+        <ul>
+          <li>For Parallel routes we need to define the components using slot</li>
+          <li>and then we can get them inside the *layout*, so that we can render</li>
+        </ul>
+      </div>
     </div>
   );
 }
