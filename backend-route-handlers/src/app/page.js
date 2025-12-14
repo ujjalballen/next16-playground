@@ -1,6 +1,6 @@
 export default async function Home() {
 
-  const response = await fetch("http://localhost:3000/api/hello");
+  const response = await fetch("http://localhost:3000/api/users");
   const users = await response.json();
 console.log(users)
   return (
