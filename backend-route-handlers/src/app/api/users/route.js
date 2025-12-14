@@ -18,11 +18,25 @@ export const users = [
   },
 ];
 
-export async function GET() {
+export async function GET(request) {
   try {
+    const searchParams = request.nextUrl.searchParams;
+    const name = searchParams.get("name");
+    // const age = searchParams.get("age")
+
+    // console.log(name, age)
+
+    let filterdUsers = users;
+
+    if (name) {
+      filterdUsers = users.filter((user) =>
+        user.name.toLowerCase().includes(name.toLowerCase())
+      );
+    }
+
     return NextResponse.json({
       success: true,
-      datas: users,
+      datas: filterdUsers,
       total: users.length,
     });
   } catch (error) {
