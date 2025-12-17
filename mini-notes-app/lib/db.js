@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
-const isConnect = false;
+let isConnect = false;
 
 async function dbConnect(){
 
