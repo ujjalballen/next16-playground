@@ -55,6 +55,27 @@ export default function NotesClient({ initialNotes }) {
     }
   };
 
+  async function deleteNote(id) {
+    try {
+      const response = await fetch(`/api/notes/${id}`, {
+        method: "DELETE",
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        console.log("Data: ", result.data)
+        setNotes(notes.filter((note) => note._id !== id));
+        toast.success("Note Deleted Successfully!");
+      } else {
+        toast.error(result?.error);
+      }
+    } catch (error) {
+      console.error("Error Delete: ", error);
+      toast.error("Somethings went wrong");
+    }
+  }
+
   console.log("all notes: ", noteDatas);
 
   return (
@@ -113,7 +134,10 @@ export default function NotesClient({ initialNotes }) {
                     Edit
                   </button>
 
-                  <button className="px-3 py-1 bg-red-700 text-white rounded-xl hover:bg-red-800 cursor-pointer hover:transition-colors">
+                  <button
+                    onClick={() => deleteNote(note._id)} // (e)
+                    className="px-3 py-1 bg-red-700 text-white rounded-xl hover:bg-red-800 cursor-pointer hover:transition-colors"
+                  >
                     Delete
                   </button>
                 </div>

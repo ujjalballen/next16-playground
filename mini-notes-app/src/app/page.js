@@ -15,7 +15,7 @@ async function getNotes() {
   }));
 
   return serializedNotes;
-}
+};
 
 export default async function Home() {
   const notes = await getNotes();
