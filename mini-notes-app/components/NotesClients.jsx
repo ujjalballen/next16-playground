@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function NotesClient({ initialNotes }) {
   const [notes, setNotes] = useState(initialNotes);
@@ -37,10 +38,18 @@ export default function NotesClient({ initialNotes }) {
 
       const result = await response.json();
 
+      if (result.success) {
+        setNotes([...notes, result.data]);
+        toast.success("Successfully created!");
+        setNoteDatas({ title: "", content: "" });
+      }
+
       console.log("Res Data: ", result);
 
       setLoading(false);
     } catch (error) {
+      console.error("Can't added Note:", error);
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
