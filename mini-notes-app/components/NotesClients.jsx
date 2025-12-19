@@ -8,9 +8,17 @@ export default function NotesClient({ initialNotes }) {
   const [noteDatas, setNoteDatas] = useState({ title: "", content: "" });
   const [loading, setLoading] = useState(false);
 
+  const [editingId, setEditingId] = useState(null);
+  const [editingNote, setEditingNote] = useState({ title: "", content: "" });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNoteDatas({ ...noteDatas, [name]: value });
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditingNote({ ...editingNote, [name]: value });
   };
 
   const handleCreateNote = async (e) => {
@@ -64,7 +72,7 @@ export default function NotesClient({ initialNotes }) {
       const result = await response.json();
 
       if (result.success) {
-        console.log("Data: ", result.data)
+        console.log("Data: ", result.data);
         setNotes(notes.filter((note) => note._id !== id));
         toast.success("Note Deleted Successfully!");
       } else {
@@ -75,6 +83,59 @@ export default function NotesClient({ initialNotes }) {
       toast.error("Somethings went wrong");
     }
   }
+
+  async function updateNote(id) {
+    // emove whitespace from both the beginning and the end of a string
+    if (!editingNote.title.trim() || !editingNote.content.trim()) {
+      console.log("You can't continue");
+      toast.error("You can't continue");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/notes/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: editingNote.title,
+          content: editingNote.content,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setNotes(notes.map((note) => (note._id === id ? result.data : note)));
+        toast.success("Note updated successfully");
+
+        setEditingId(null);
+        setEditingNote({ title: "", content: "" });
+      }
+
+      setLoading(false);
+    } catch (error) {
+      console.error("Error Updated: ", error);
+      toast.error("Faild to Updated");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const startEdit = (note) => {
+    if (!note._id || !note.title || !note.content) {
+      toast.error("Note is not exsit");
+      return;
+    }
+
+    setEditingId(note._id);
+    setEditingNote({ title: note.title, content: note.content });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditingNote({ title: "", content: "" });
+  };
 
   console.log("all notes: ", noteDatas);
 
@@ -127,30 +188,78 @@ export default function NotesClient({ initialNotes }) {
         ) : (
           notes.map((note) => (
             <div key={note._id} className="p-6 rounded-lg shadow-md">
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="text-xl font-semibold">{note?.title}</h3>
-                <div className="flex gap-2">
-                  <button className="p-3 bg-amber-700 text-white rounded-xl hover:bg-amber-600 cursor-pointer hover:transition-colors">
-                    Edit
-                  </button>
+              {editingId === note._id ? (
+                <>
+                  {/* Editing Mode */}
+                  <div className="space-y-4">
+                    <input
+                      type="text"
+                      name="title"
+                      placeholder="Note Title"
+                      value={editingNote.title}
+                      onChange={handleEditChange}
+                      className="w-full p-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                    <textarea
+                      name="content"
+                      placeholder="Write your content"
+                      value={editingNote.content}
+                      onChange={handleEditChange}
+                      rows={4}
+                      className="w-full p-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
 
-                  <button
-                    onClick={() => deleteNote(note._id)} // (e)
-                    className="px-3 py-1 bg-red-700 text-white rounded-xl hover:bg-red-800 cursor-pointer hover:transition-colors"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
+                    <div className="flex gap-2">
+                      <button
+                        disabled={loading}
+                        onClick={() => updateNote(note._id)}
+                        className="px-3 py-2 bg-amber-700 text-white rounded-xl hover:bg-amber-600 cursor-pointer hover:transition-colors disabled:opacity-50"
+                      >
+                        {loading ? "Updating..." : "Update Note"}
+                      </button>
+                      <button
+                        onClick={() => cancelEdit}
+                        className="px-3 py-2 bg-amber-200 text-white rounded-xl hover:bg-amber-300 cursor-pointer hover:transition-colors disabled:opacity-50"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* View Mode */}
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-xl font-semibold">{note?.title}</h3>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => startEdit(note)}
+                        className="p-3 bg-amber-700 text-white rounded-xl hover:bg-amber-600 cursor-pointer hover:transition-colors"
+                      >
+                        Edit
+                      </button>
 
-              <p className="text-black mb-2">{note?.content}</p>
-              <p className="text-sm">
-                Created: {new Date(note?.createdAt).toLocaleDateString()}
-              </p>
-              {note?.updatedAt !== note?.createdAt && (
-                <p className="text-sm">
-                  Updated: {new Date(note?.updatedAt).toLocaleDateString()}
-                </p>
+                      <button
+                        onClick={() => deleteNote(note._id)} // (e)
+                        className="px-3 py-1 bg-red-700 text-white rounded-xl hover:bg-red-800 cursor-pointer hover:transition-colors"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+
+                  <p className="text-black mb-2">{note?.content}</p>
+                  <p className="text-sm">
+                    Created: {new Date(note?.createdAt).toLocaleDateString()}
+                  </p>
+                  {note?.updatedAt !== note?.createdAt && (
+                    <p className="text-sm">
+                      Updated: {new Date(note?.updatedAt).toLocaleDateString()}
+                    </p>
+                  )}
+                </>
               )}
             </div>
           ))
