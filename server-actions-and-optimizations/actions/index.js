@@ -7,13 +7,10 @@ export async function createUser(formData) {
 }
 
 export async function createUserTWO(previousState, formData) {
-  try {
-    const name = formData.get("email");
+  const name = formData.get("email");
 
-    console.log("Created User: ", name);
+  console.log("Created User: ", name);
+  console.log("prev State: ", previousState)
 
-    return { success: true, data: name, message: "Successfully" };
-  } catch (error) {
-    return { success: false, error: true, message: "Failed to save item." };
-  }
+  return { success: true, data: name, message: "Successfully" };
 }

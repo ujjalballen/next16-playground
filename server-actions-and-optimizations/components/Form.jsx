@@ -3,11 +3,9 @@
 import { useActionState } from "react";
 import { createUserTWO } from "../actions";
 
-
 export default function Form() {
-  const [state, formAction, isPending] = useActionState(createUserTWO, null);
+  const [formState, formAction, isPending] = useActionState(createUserTWO, null);
 
- console.log("Current useActionState:", state)
   return (
     <form action={formAction}>
       <input
@@ -20,9 +18,12 @@ export default function Form() {
       <button type="submit" className="border border-amber-700 cursor-pointer">
         Create
       </button>
-
       {state.error && <p>{state.message}</p>}
-      {state.success && <p style={{color: 'green'}}>{state.message}</p>}
+      {formState?.success && (
+      <p className="bg-green-700 text-white my-3 w-64 p-2 rounded-sm">
+        {formState?.message}
+      </p>
+      )}
     </form>
   );
 }
