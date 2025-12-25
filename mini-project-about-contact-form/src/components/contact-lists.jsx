@@ -1,4 +1,4 @@
-import { getContacts } from "../../actions";
+import { getContacts, updateContact } from "../../actions";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
@@ -46,14 +46,24 @@ export default async function ContactLists() {
 
                 <div className="flex items-end gap-2">
                   {contact.status === "new" && (
-                    <form >
+                    <form
+                      action={async () => {
+                        "use server";
+                        await updateContact(contact._id, "read")
+                      }}
+                    >
                       <Button variant="outline" size="sm" type="submit">
                         Mark as Read
                       </Button>
                     </form>
                   )}
                   {contact.status === "read" && (
-                    <form>
+                    <form
+                      action={async () => {
+                        "use server";
+                        await updateContact(contact._id, "replied")
+                      }}
+                    >
                       <Button variant="outline" size="sm" type="submit">
                         Mark as Replied
                       </Button>

@@ -3,6 +3,7 @@
 import dbConnect from "@/lib/db";
 import ContactForm from "@/components/contact-form";
 import { Contact } from "../models/Contact";
+import { revalidatePath } from "next/cache";
 
 export async function createContact(formData) {
   try {
@@ -54,5 +55,19 @@ export async function getContacts() {
   } catch (error) {
     console.error("Error fetching contact: ", error);
     return [];
+  }
+}
+
+export async function updateContact(contactId, status) {
+  try {
+    console.log(status)
+    await dbConnect();
+    await Contact.findByIdAndUpdate(contactId, { status });
+
+    revalidatePath("/contacts")
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating contact status: ", error);
+    return { success: false, error: "Faild to Updated status" };
   }
 }
