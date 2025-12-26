@@ -1,4 +1,5 @@
 import ContactLists from "@/components/contact-lists";
+import ContactStats from "@/components/contact-stats";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -18,6 +19,7 @@ export default async function ContactsPage() {
           </Link>
         </div>
 
+        <ContactStats />
         <ContactLists />
       </div>
     </div>

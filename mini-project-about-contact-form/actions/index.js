@@ -3,7 +3,7 @@
 import dbConnect from "@/lib/db";
 import ContactForm from "@/components/contact-form";
 import { Contact } from "../models/Contact";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 
 export async function createContact(formData) {
   try {
@@ -46,6 +46,8 @@ export async function getContacts() {
     await dbConnect();
 
     const contacts = await Contact.find({}).sort({ createdAt: -1 }).lean();
+
+
     return contacts.map((contact) => ({
       ...contact,
       _id: contact._id.toString(),
@@ -60,14 +62,37 @@ export async function getContacts() {
 
 export async function updateContact(contactId, status) {
   try {
-    console.log(status)
+    console.log(status);
     await dbConnect();
     await Contact.findByIdAndUpdate(contactId, { status });
 
-    revalidatePath("/contacts")
+    // revalidatePath("/contacts");
+    revalidateTag("stats")
     return { success: true };
   } catch (error) {
     console.error("Error updating contact status: ", error);
     return { success: false, error: "Faild to Updated status" };
   }
+}
+
+export async function contactStats() {
+  const getCacheStats = unstable_cache(
+    async () => {
+      await dbConnect();
+      const total = await Contact.countDocuments();
+      const newCount = await Contact.countDocuments({ status: "new" });
+      console.log('newCount: ', newCount)
+      const readCount = await Contact.countDocuments({ status: "read" });
+      const repliedCount = await Contact.countDocuments({ status: "replied" });
+
+      return { total, newCount, readCount, repliedCount };
+    },
+    ["contact-stats"],
+    {
+      tags: ["stats"],
+      // revalidate: 60,
+    }
+  );
+
+ return getCacheStats();
 }
