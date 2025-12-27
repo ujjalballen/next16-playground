@@ -1,8 +1,8 @@
-import { contactStats } from "../../actions";
+import { contactStats, getContactStats } from "../../actions";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 export default async function ContactStats() {
-  const stats = await contactStats();
+  const stats = await getContactStats()
   console.log(stats)
 
   return (
