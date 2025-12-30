@@ -26,8 +26,6 @@ export default function RootLayout({ children }) {
       >
         <main className="">
           <QueryProvider>{children}</QueryProvider>
-
-          {/* toaster */}
           <div>
             <Toaster />
           </div>
