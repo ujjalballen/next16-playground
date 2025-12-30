@@ -1,3 +1,4 @@
+import AddUserForm from "@/components/add-user-form";
 import UsersList from "@/components/users-list";
 
 export default async function Home() {
@@ -11,7 +12,10 @@ export default async function Home() {
 
           <div className="grid gap-6 md:grid-cols-2">
             <div className="space-y-6">
-              <UsersList/>
+              <UsersList />
+            </div>
+            <div className="space-y-6">
+              <AddUserForm />
             </div>
           </div>
         </div>
