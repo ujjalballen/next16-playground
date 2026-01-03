@@ -16,10 +16,14 @@ export function useCreateTodo() {
     onSuccess: (result) => {
       console.log("RESULT: ", result);
       if (result.success) {
-        // addTodo(result.data);
+        // Use Zustand action to immediately update UI:
+
+        addTodo(result.data);
         console.log("result: ", result);
 
-        queryClient.invalidateQueries({ queryKey: todoKeys.lists() });
+        // Don't invalidate queries (usually)
+        // if we invalidate then we do not need to used "Zustand action => addTodo"
+        // queryClient.invalidateQueries({ queryKey: todoKeys.lists() });
       }
     },
   });
@@ -32,7 +36,7 @@ export function useGetAllTodos() {
     queryKey: todoKeys.lists(),
     queryFn: async () => {
       const result = await getTodos();
-      console.log("All data: ", result);
+      // console.log("All data: ", result);
 
       if (result.success) {
         // need to update zustand store with the fetched data
