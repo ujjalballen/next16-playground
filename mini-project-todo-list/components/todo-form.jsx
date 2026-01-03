@@ -31,6 +31,7 @@ export function TodoForm() {
     },
   });
 
+
   const onSubmit = async (data) => {
     try {
       const result = await createTodoMutation.mutateAsync(data);
@@ -98,7 +99,7 @@ export function TodoForm() {
           <div>
             <Label htmlFor="priority">Priority</Label>
             <Select
-              value={form.getValues("priority")}
+              value={form.watch("priority")}
               onValueChange={(value) => form.setValue("priority", value)}
             >
               <SelectTrigger>
