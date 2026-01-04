@@ -58,3 +58,36 @@ export async function getTodos(params) {
     };
   }
 }
+
+
+export async function toggleTodo(id) {
+  try {
+    await connectDB();
+    const todo = await Todo.findById(id);
+
+    if (!todo) {
+      return {
+        success: false,
+        error: "Todo not found"
+      }
+    }
+
+    todo.completed = !todo.completed;
+
+    await todo.save();
+
+    revalidatePath("/")
+
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(todo))
+    }
+
+  } catch (error) {
+    console.error("Error toggling todo:", error);
+    return {
+      success: false,
+      error: "Faild to toggle todo"
+    }
+  }
+}

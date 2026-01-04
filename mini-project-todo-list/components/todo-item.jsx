@@ -7,9 +7,25 @@ import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Calendar, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { useToggleTodo } from "@/hooks/use-create-todo";
+import { toast } from "sonner";
 
 export default function TodoItem({ todo }) {
-  const [isdeleting, setIsdeleting] = useState(false); 
+  const [isdeleting, setIsdeleting] = useState(false);
+
+  const toggleMutation = useToggleTodo()
+
+  const handleToggle = async () => {
+    try {
+      const result = await toggleMutation.mutateAsync(todo._id)
+      if (!result.success) {
+        toast.error("Error: ", result.error)
+      }
+
+    } catch (error) {
+      toast.error("Faild to update")
+    }
+  }
 
   const getPriorityColor = (priority) => {
     switch (priority) {
@@ -34,7 +50,7 @@ export default function TodoItem({ todo }) {
         <div className="flex items-start gap-3">
           <Checkbox
             checked={todo.completed}
-            onCheckedChange={() => {}}
+            onCheckedChange={handleToggle}
             // disabled={flase}
             className={"mt-1"}
           />
@@ -80,8 +96,8 @@ export default function TodoItem({ todo }) {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => {}}
-            //   disabled={false}
+              onClick={() => { }}
+              //   disabled={false}
               className={cn(
                 "h-8 w-8 p-0",
                 isdeleting && "bg-destructive text-destructive-foreground"

@@ -1,4 +1,4 @@
-import { createTodo, getTodos } from "@/actions/todo-actions";
+import { createTodo, getTodos, toggleTodo } from "@/actions/todo-actions";
 import { useTodoStore } from "@/store/todo-store";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -14,7 +14,7 @@ export function useCreateTodo() {
   return useMutation({
     mutationFn: (data) => createTodo(data),
     onSuccess: (result) => {
-      console.log("RESULT: ", result);
+      console.log("ONSUCCESS RESULT: ", result);
       if (result.success) {
         // Use Zustand action to immediately update UI:
 
@@ -49,3 +49,22 @@ export function useGetAllTodos() {
     },
   });
 }
+
+
+export function useToggleTodo() {
+  const queryClient = useQueryClient();
+  const updateTodoInStore = useTodoStore((state) => state.updateTodo)
+
+  return useMutation({
+    mutationFn: (id) => toggleTodo(id),
+    onSuccess: (result, id) => {
+      if (result.success) {
+        updateTodoInStore(id, { completed: result.data.completed })
+
+        queryClient.invalidateQueries({ queryKey: todoKeys.lists() })
+      }
+    }
+  })
+}
+
+

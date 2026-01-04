@@ -5,6 +5,7 @@ import { Card, CardContent } from "./ui/card";
 import { Loader2 } from "lucide-react";
 import { selectFilteredTodos, useTodoStore } from "@/store/todo-store";
 import TodoItem from "./todo-item";
+import { useMemo } from "react";
 
 export default function TodoList() {
   const { data: todos, isPending, isError, error } = useGetAllTodos();
