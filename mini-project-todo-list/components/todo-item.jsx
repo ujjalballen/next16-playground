@@ -7,13 +7,27 @@ import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Calendar, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { useToggleTodo } from "@/hooks/use-create-todo";
+import { useDeleteTodo, useToggleTodo } from "@/hooks/use-create-todo";
 import { toast } from "sonner";
 
 export default function TodoItem({ todo }) {
   const [isdeleting, setIsdeleting] = useState(false);
 
-  const toggleMutation = useToggleTodo()
+  const toggleMutation = useToggleTodo();
+  const deleteMutation = useDeleteTodo();
+
+  const handleDelete = async () => {
+    try {
+
+      const result = await deleteMutation.mutateAsync(todo._id)
+      if (result.success) {
+        toast.success("Todo Deleted Successfully")
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error("Todo faild to deleted")
+    }
+  }
 
   const handleToggle = async () => {
     try {
@@ -96,11 +110,11 @@ export default function TodoItem({ todo }) {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => { }}
-              //   disabled={false}
+              onClick={handleDelete}
+              disabled={deleteMutation.isPending}
               className={cn(
                 "h-8 w-8 p-0",
-                isdeleting && "bg-destructive text-destructive-foreground"
+                deleteMutation.isPending && "bg-destructive text-destructive-foreground"
               )}
             >
               <Trash2 className="w-4 h-4" />

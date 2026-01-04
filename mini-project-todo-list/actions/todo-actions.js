@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import connectDB from "@/lib/db";
 import Todo from "@/models/todo";
 import { createTodoSchema } from "@/validations/todo";
+import { success } from "zod";
 
 export async function createTodo(data) {
   try {
@@ -88,6 +89,34 @@ export async function toggleTodo(id) {
     return {
       success: false,
       error: "Faild to toggle todo"
+    }
+  }
+}
+
+
+export async function deleteTodo(id) {
+  try {
+    await connectDB();
+    const todo = await Todo.findByIdAndDelete(id);
+    if (!todo) {
+      return {
+        success: false,
+        error: "todo not found"
+      }
+    }
+
+    revalidatePath("/");
+
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(todo))
+    }
+
+  } catch (error) {
+    console.log("Error deleting todo: ", error);
+    return {
+      success: false,
+      error: "Faild to delete todo"
     }
   }
 }
