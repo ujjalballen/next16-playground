@@ -1,15 +1,19 @@
 import { createPost, getPosts, seedDB } from "@/actions";
+import { PostList } from "@/components/posts-list";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { prisma } from "@/lib/db";
 
 export default async function Home() {
 
-  const posts = await getPosts();
+  // const posts = await getPosts();
+
+  const posts = await prisma.post.findMany();
 
   console.log("posts: ", posts)
-  
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 max-w-2xl">
@@ -23,9 +27,9 @@ export default async function Home() {
               <CardTitle>Create </CardTitle>
             </CardHeader>
             <CardContent>
-              <form 
-              action={createPost}
-              className="space-y-4">
+              <form
+                action={createPost}
+                className="space-y-4">
                 <div>
                   <Label htmlFor="title">Title *</Label>
                   <Input
@@ -49,7 +53,7 @@ export default async function Home() {
                   <Button
                     type="submit"
                     variant="outline"
-className={"cursor-pointer"}
+                    className={"cursor-pointer"}
                   >
                     Crate Post
                   </Button>
@@ -57,6 +61,8 @@ className={"cursor-pointer"}
               </form>
             </CardContent>
           </Card>
+
+          <PostList posts={posts} />
         </main>
 
 
