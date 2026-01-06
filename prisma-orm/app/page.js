@@ -1,11 +1,15 @@
-import { createPost, seedDB } from "@/actions";
+import { createPost, getPosts, seedDB } from "@/actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default async function Home() {
-  // await seedDB()
+
+  const posts = await getPosts();
+
+  console.log("posts: ", posts)
+  
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 max-w-2xl">
@@ -45,7 +49,7 @@ export default async function Home() {
                   <Button
                     type="submit"
                     variant="outline"
-
+className={"cursor-pointer"}
                   >
                     Crate Post
                   </Button>
@@ -55,9 +59,7 @@ export default async function Home() {
           </Card>
         </main>
 
-        <footer className="mt-12 text-center text-sm text-muted-foreground">
-          <p>This app demostrates CRUD operations with modern React patterns</p>
-        </footer>
+
       </div>
     </div>
   );

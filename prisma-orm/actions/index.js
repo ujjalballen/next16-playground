@@ -17,16 +17,27 @@ export const seedDB = async () => {
 }
 
 
-export async function createPost(title, des) {
-  const post =  await prisma.post.create({
+export async function createPost(formData) {
+    const title = formData.get("title");
+    const description = formData.get("description");
+
+    const post = await prisma.post.create({
         data: {
             title: title,
-            description: des
+            description: description
         }
     })
 
+    console.log("Data inserted successfully")
     return {
         success: true,
         data: post
     }
+}
+
+
+export async function getPosts() {
+    const posts = await prisma.post.findMany()
+
+    return posts;
 }
