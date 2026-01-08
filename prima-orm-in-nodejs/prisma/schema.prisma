@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Post {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  name       String   @default("SNigdha")
+  email      String   @unique
+  created_at DateTime @default(now())
+}
