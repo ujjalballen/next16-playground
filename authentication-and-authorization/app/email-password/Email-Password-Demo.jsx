@@ -2,14 +2,30 @@
 
 import { AuthDemoPage } from "@/components/auth-demo-page";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser-client";
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 export function EmailPassDemo({ user }) {
     const [mode, setMode] = useState('signup');
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [status, setStatus] = useState("");
     const supabaseBrowserClient = getSupabaseBrowserClient();
-    const [currentUser, setCurrentUser] =useState(user)
+    const [currentUser, setCurrentUser] = useState(user)
+
+    useEffect(() => {
+        const { data: { subscription } } = supabaseBrowserClient.auth.onAuthStateChange((event, session) => {
+            console.log('Auth Event:', event);
+            console.log("Auth Session: ", session)
+
+            setCurrentUser(session?.user || null)
+        })
+
+
+        // To stop listening:
+        return () => {
+            subscription.unsubscribe();
+        }
+    }, [supabaseBrowserClient])
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -66,6 +82,17 @@ export function EmailPassDemo({ user }) {
             }
         }
 
+    }
+
+
+    const handleSignOut = async () => {
+        const {error} = await supabaseBrowserClient.auth.signOut();
+        if(error){
+            console.log("Error SignOut: ", error)
+        };
+
+        setCurrentUser(null);
+        setStatus("User successfully signOut")
     }
 
     return (
@@ -169,7 +196,7 @@ export function EmailPassDemo({ user }) {
                 )
             }
 
-            <div className="rounded-[28px] border border-white/10 bg-white/5 p-7 text-slate-200 shadow-[0_25px_70px_rgba(2,6,23,0.65)] backdrop-blur">
+            <div className="rounded-[28px] border border-white/10 bg-black p-7 text-slate-200 shadow-[0_25px_70px_rgba(2,6,23,0.65)] backdrop-blur">
                 {currentUser ? (
                     <>
                         <dl className="mt-5 space-y-3 text-sm text-slate-200">
@@ -185,12 +212,13 @@ export function EmailPassDemo({ user }) {
                                 <dt className="text-slate-400">Last sign in</dt>
                                 <dd>
                                     {currentUser.last_sign_in_at
-                                        ? new Date(user.last_sign_in_at).toLocaleString()
+                                        ? new Date(currentUser.last_sign_in_at).toLocaleString()
                                         : "—"}
                                 </dd>
                             </div>
                         </dl>
                         <button
+                        onClick={handleSignOut}
                             className="mt-6 inline-flex cursor-pointer w-full items-center justify-center rounded-full bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/20"
                         >
                             Sign out
