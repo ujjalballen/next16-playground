@@ -1,10 +1,13 @@
 "use client"
 
+import { getSupabaseBrowserClient } from "@/lib/supabase/browser-client";
 import { useState } from "react"
 
-export function EmailPassDemo() {
+export function EmailPassDemo({ user }) {
     const [mode, setMode] = useState('signup');
-    const [formData, setFormData] = useState({ email: "", password: "" })
+    const [formData, setFormData] = useState({ email: "", password: "" });
+    const [status, setStatus] = useState("");
+    const supabaseBrowserClient = getSupabaseBrowserClient();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -15,9 +18,58 @@ export function EmailPassDemo() {
         }));
     }
 
+
+    const hanldeSubmit = async (e) => {
+        e.preventDefault();
+
+        // Call Supabase Auth signup method
+        if (mode === "signup") {
+            const { data, error } = await supabaseBrowserClient.auth.signUp({
+                email: formData.email,
+                password: formData.password,
+                options: {
+                    // Use 'data' to store extra info in the user's metadata
+                    // data: {
+                    //     display_name: username
+                    // },
+                    // Optional: Where to send the user after they click the email link
+                    emailRedirectTo: `${window.location.origin}/welcome`
+                }
+            })
+
+            if (error) {
+                console.error("Signup error:", error.message);
+                setStatus(error.message);
+            } else {
+                console.log("Check your email for the confirmation link!", data.user);
+                setStatus("Check your email for the confirmation link!")
+            }
+        } else {
+            const { data, error } = await supabaseBrowserClient.auth.signInWithPassword({
+                email: formData.email,
+                password: formData.password
+            })
+
+            if (error) {
+                // Handle incorrect password or non-existent user
+                console.error("Login failed:", error.message);
+                setStatus(error.message);
+            } else {
+                console.log("FUll Data: ", data)
+                // 2. Success! data.session contains the JWT token
+                console.log("Logged in successfully:", data.user);
+                setStatus("Logged in successfully")
+                // Use window.location or your router to redirect
+                // window.location.href = '/dashboard';
+            }
+        }
+
+    }
+
     return (
         <div>
             <form
+                onSubmit={hanldeSubmit}
                 className="relative overflow-hidden rounded-[32px] border border-emerald-500/30 bg-gradient-to-br from-[#05130d] via-[#04100c] to-[#0c2a21] p-8 text-slate-100 shadow-[0_35px_90px_rgba(2,6,23,0.65)]"
             >
                 <div
@@ -63,6 +115,7 @@ export function EmailPassDemo() {
                         Email
                         <input
                             type="email"
+                            name="email"
                             value={formData.email}
                             onChange={handleChange}
                             required
@@ -74,6 +127,7 @@ export function EmailPassDemo() {
                         Password
                         <input
                             type="password"
+                            name="password"
                             value={formData.password}
                             onChange={handleChange}
                             required
@@ -85,12 +139,17 @@ export function EmailPassDemo() {
                 </div>
                 <button
                     type="submit"
-                    
+
                     className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-900/30 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:bg-emerald-600/40"
                 >
                     {mode === "signup" ? "Create account" : "Sign in"}
                 </button>
 
+                {status && (
+                    <p className="mt-4 text-sm text-slate-300" role="status" aria-live="polite">
+                        {status}
+                    </p>
+                )}
             </form>
         </div>
     )

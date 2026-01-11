@@ -8,6 +8,6 @@ export default async function EmailPasswordPage() {
 
     console.log("USER: ", user)
     return (
-        < EmailPassDemo />
+        < EmailPassDemo user={user} />
     )
 }

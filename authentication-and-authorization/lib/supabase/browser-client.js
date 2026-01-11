@@ -5,7 +5,7 @@ let client;
 
 export function getSupabaseBrowserClient() {
     // if (client) return client
-    // ;
+
     if(client){
         return client
     }
