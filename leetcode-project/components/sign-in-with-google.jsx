@@ -1,19 +1,42 @@
 "use client";
-
+import { getSupabaseBrowserClient } from '@/lib/supabase/supabase-client';
 import { toast } from 'sonner'
 
 
 export function SigninWithGoogle() {
 
-    const handleSignInWithGoogle = () => {
+    const supabase = getSupabaseBrowserClient();
+
+    const handleSignInWithGoogle = async () => {
         try {
 
-            toast.success('Signed in successfully!', {
-                style: {
-                    background: '#4CAF50', // A nice green
-                    color: 'white',
-                },
-            });
+            const { data, error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: `${window.location.origin}/auth/callback`,
+                    queryParams: {
+                        prompt: 'consent',
+                        access_type: 'offline',
+                        include_granted_scopes: 'true'
+                    }
+
+                }
+            })
+
+            if (error) {
+                console.error("faild to signin with Google:", error);
+                toast.error("Faild to signin with google", {
+                    style: {
+                        background: '#F44336', // A nice red
+                        color: 'white',
+                    },
+                })
+            }
+
+            if (data) {
+                console.log("GOOGLE DATA: ", data)
+            }
+
 
         } catch (error) {
             console.error("Faild to Sign in with google: ", error);
