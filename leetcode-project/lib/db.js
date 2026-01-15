@@ -1,15 +1,33 @@
+// import "dotenv/config";
+// import { PrismaPg } from '@prisma/adapter-pg'
+// import { PrismaClient } from '../generated/prisma/client'
+
+// const connectionString = `${process.env.DATABASE_URL}`
+
+// const adapter = new PrismaPg({ connectionString })
+// const prisma = new PrismaClient({ adapter })
+
+// export { prisma }
+
+
 import "dotenv/config";
-import { PrismaPg } from '@prisma/adapter-pg'
-import { PrismaClient } from '../generated/prisma/client'
+import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '../generated/prisma/client';
 
-const connectionString = `${process.env.DATABASE_URL}`
-const globalForPrisma = globalThis
+const connectionString = process.env.DATABASE_URL;
 
-const adapter = new PrismaPg({ connectionString })
+const adapter = new PrismaPg({ connectionString });
+
+// Create the Prisma client
 const prisma = new PrismaClient({ adapter });
 
-const db = globalForPrisma.prisma || prisma;
+// Use globalThis to avoid creating multiple clients in dev (hot reload)
+const globalForPrisma = globalThis;
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = db
+const database = globalForPrisma.prisma || prisma;
 
-export { db }
+if (process.env.NODE_ENV !== "production") {
+    globalForPrisma.prisma = database;
+}
+
+export { database };

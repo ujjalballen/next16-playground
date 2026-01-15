@@ -1,8 +1,6 @@
 import { Header } from "@/components/Header";
 import { createSupabaseServerClient } from "@/lib/supabase/supabase-server";
-import Image from "next/image";
-import { redirect } from "next/navigation";
-import { toast } from "sonner";
+import {onBoardUser } from "@/modules/auth/actions";
 
 export default async function HomePage() {
   // Example user state
@@ -11,6 +9,8 @@ export default async function HomePage() {
   const { data: { user }, error } = await supabase.auth.getUser();
 
   console.log("Data: ", user)
+
+  await onBoardUser()
 
 
   return (
