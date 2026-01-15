@@ -3,10 +3,22 @@
 import { database } from "@/lib/db";
 import { createSupabaseServerClient } from "@/lib/supabase/supabase-server";
 
+// get current user
+export const currentUser = async () => {
+  const supabase = await createSupabaseServerClient();
+  const { data: { user }, error } = await supabase.auth.getUser();
+
+  if (error) {
+    return null
+  };
+
+  return user;
+};
+
 export const onBoardUser = async () => {
   try {
-    const supabase = await createSupabaseServerClient();
-    const { data: { user } } = await supabase.auth.getUser();
+
+    const user = await currentUser();
 
     if (!user) {
       return { success: false, error: "No authenticated user found!" };
@@ -35,3 +47,35 @@ export const onBoardUser = async () => {
   }
 };
 
+
+export async function currentUserRole() {
+  try {
+    const user = await currentUser();
+    if (!user) {
+      return { success: false, error: "No authenticated user found!" };
+    }
+
+    const { id } = user;
+
+    const userRole = await database.profile.findUnique({
+      where: {
+        supabaseUserId: id
+      },
+      select: {
+        role: true
+      }
+    })
+
+    return {
+      success: true,
+      role: userRole.role
+    }
+
+  } catch (error) {
+    console.error("Error fetching user role: ", error);
+    return {
+      success: false,
+      error: "Faild to fetch user role"
+    }
+  }
+}

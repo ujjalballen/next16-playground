@@ -14,7 +14,7 @@ export async function createSupabaseServerClient() {
             setAll(cookiesToSet) {
                 try {
                     cookiesToSet.forEach(({ name, value, options }) => {
-                        console.log("supabase createServerClient OPTIONS: ", { name, value, options })
+                        // console.log("supabase createServerClient OPTIONS: ", { name, value, options })
                         cookieStore.set(name, value, options)
                     })
                 } catch (error) {
