@@ -79,3 +79,20 @@ export async function currentUserRole() {
     }
   }
 }
+
+
+export async function getCurrentUserFromTable() {
+  const user = await currentUser();
+
+  const dbUser = await database.profile.findUnique({
+    where: {
+      supabaseUserId: user.id
+    },
+    select: {
+      id: true
+    }
+  })
+
+  return dbUser;
+
+}
