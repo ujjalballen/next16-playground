@@ -44,3 +44,8 @@ export { Prisma }
  * 
  */
 export type Profile = Prisma.ProfileModel
+/**
+ * Model Problem
+ * 
+ */
+export type Problem = Prisma.ProblemModel

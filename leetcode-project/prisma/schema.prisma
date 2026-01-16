@@ -7,18 +7,49 @@ datasource db {
   provider = "postgresql"
 }
 
-model Profile {
-  id             Int      @id @default(autoincrement())
-  supabaseUserId String   @unique @default(uuid())
-  name           String?
-  email          String?  @unique
-  avatarUrl      String?
-  role           UserRole @default(USER)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-}
-
 enum UserRole {
   ADMIN
   USER
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+model Profile {
+  id             Int       @id @default(autoincrement())
+  supabaseUserId String    @unique @default(uuid())
+  name           String?
+  email          String?   @unique
+  avatarUrl      String?
+  role           UserRole  @default(USER)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  problems       Problem[]
+  @@index([role])
+}
+
+model Problem {
+  id          String     @id @default(uuid())
+  title       String
+  description String
+  difficulty  Difficulty
+  tags        String[]
+
+  userId      Int
+  examples    Json
+  constraints String
+  hints       String?
+  editorial   String?
+
+  testCases         Json
+  codeSnippets      Json
+  referenceSolution Json
+  updatedAt         DateTime @updatedAt
+  createdAt         DateTime @default(now())
+  user              Profile  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([difficulty])
 }

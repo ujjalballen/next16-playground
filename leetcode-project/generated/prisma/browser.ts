@@ -22,3 +22,8 @@ export * from './enums.ts';
  * 
  */
 export type Profile = Prisma.ProfileModel
+/**
+ * Model Problem
+ * 
+ */
+export type Problem = Prisma.ProblemModel
