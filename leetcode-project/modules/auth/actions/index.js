@@ -1,19 +1,19 @@
 "use server";
 
 import { database } from "@/lib/db";
-import { createSupabaseServerClient } from "@/lib/supabase/supabase-server";
+import { currentUser } from "@/lib/supabase/current-user";
 
 // get current user
-export const currentUser = async () => {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user }, error } = await supabase.auth.getUser();
+// export const currentUser = async () => {
+//   const supabase = await createSupabaseServerClient();
+//   const { data: { user }, error } = await supabase.auth.getUser();
 
-  if (error) {
-    return null
-  };
+//   if (error) {
+//     return null
+//   };
 
-  return user;
-};
+//   return user;
+// };
 
 export const onBoardUser = async () => {
   try {

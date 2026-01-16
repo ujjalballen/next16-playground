@@ -46,7 +46,7 @@ model Problem {
 
   testCases         Json
   codeSnippets      Json
-  referenceSolution Json
+  referenceSolutions Json
   updatedAt         DateTime @updatedAt
   createdAt         DateTime @default(now())
   user              Profile  @relation(fields: [userId], references: [id], onDelete: Cascade)
