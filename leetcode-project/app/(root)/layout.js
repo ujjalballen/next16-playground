@@ -1,4 +1,5 @@
-import { currentUser, currentUserRole } from "@/modules/auth/actions";
+import { currentUser } from "@/lib/supabase/current-user";
+import { currentUserRole } from "@/modules/auth/actions";
 import { Navbar } from "@/modules/home/components/navbar";
 
 export default async function RootLayout({ children }) {
