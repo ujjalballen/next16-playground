@@ -10,4 +10,5 @@
  */
 export type * from './models/Profile.ts'
 export type * from './models/Problem.ts'
+export type * from './models/ProblemSolved.ts'
 export type * from './commonInputTypes.ts'

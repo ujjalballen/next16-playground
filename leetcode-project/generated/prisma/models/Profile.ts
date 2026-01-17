@@ -241,6 +241,7 @@ export type ProfileWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
   problems?: Prisma.ProblemListRelationFilter
+  solvedProblems?: Prisma.ProblemSolvedListRelationFilter
 }
 
 export type ProfileOrderByWithRelationInput = {
@@ -253,6 +254,7 @@ export type ProfileOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   problems?: Prisma.ProblemOrderByRelationAggregateInput
+  solvedProblems?: Prisma.ProblemSolvedOrderByRelationAggregateInput
 }
 
 export type ProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -268,6 +270,7 @@ export type ProfileWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
   problems?: Prisma.ProblemListRelationFilter
+  solvedProblems?: Prisma.ProblemSolvedListRelationFilter
 }, "id" | "supabaseUserId" | "email">
 
 export type ProfileOrderByWithAggregationInput = {
@@ -309,6 +312,7 @@ export type ProfileCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   problems?: Prisma.ProblemCreateNestedManyWithoutUserInput
+  solvedProblems?: Prisma.ProblemSolvedCreateNestedManyWithoutUserInput
 }
 
 export type ProfileUncheckedCreateInput = {
@@ -321,6 +325,7 @@ export type ProfileUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   problems?: Prisma.ProblemUncheckedCreateNestedManyWithoutUserInput
+  solvedProblems?: Prisma.ProblemSolvedUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type ProfileUpdateInput = {
@@ -332,6 +337,7 @@ export type ProfileUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   problems?: Prisma.ProblemUpdateManyWithoutUserNestedInput
+  solvedProblems?: Prisma.ProblemSolvedUpdateManyWithoutUserNestedInput
 }
 
 export type ProfileUncheckedUpdateInput = {
@@ -344,6 +350,7 @@ export type ProfileUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   problems?: Prisma.ProblemUncheckedUpdateManyWithoutUserNestedInput
+  solvedProblems?: Prisma.ProblemSolvedUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type ProfileCreateManyInput = {
@@ -462,6 +469,20 @@ export type ProfileUpdateOneRequiredWithoutProblemsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProfileUpdateToOneWithWhereWithoutProblemsInput, Prisma.ProfileUpdateWithoutProblemsInput>, Prisma.ProfileUncheckedUpdateWithoutProblemsInput>
 }
 
+export type ProfileCreateNestedOneWithoutSolvedProblemsInput = {
+  create?: Prisma.XOR<Prisma.ProfileCreateWithoutSolvedProblemsInput, Prisma.ProfileUncheckedCreateWithoutSolvedProblemsInput>
+  connectOrCreate?: Prisma.ProfileCreateOrConnectWithoutSolvedProblemsInput
+  connect?: Prisma.ProfileWhereUniqueInput
+}
+
+export type ProfileUpdateOneRequiredWithoutSolvedProblemsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProfileCreateWithoutSolvedProblemsInput, Prisma.ProfileUncheckedCreateWithoutSolvedProblemsInput>
+  connectOrCreate?: Prisma.ProfileCreateOrConnectWithoutSolvedProblemsInput
+  upsert?: Prisma.ProfileUpsertWithoutSolvedProblemsInput
+  connect?: Prisma.ProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProfileUpdateToOneWithWhereWithoutSolvedProblemsInput, Prisma.ProfileUpdateWithoutSolvedProblemsInput>, Prisma.ProfileUncheckedUpdateWithoutSolvedProblemsInput>
+}
+
 export type ProfileCreateWithoutProblemsInput = {
   supabaseUserId?: string
   name?: string | null
@@ -470,6 +491,7 @@ export type ProfileCreateWithoutProblemsInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  solvedProblems?: Prisma.ProblemSolvedCreateNestedManyWithoutUserInput
 }
 
 export type ProfileUncheckedCreateWithoutProblemsInput = {
@@ -481,6 +503,7 @@ export type ProfileUncheckedCreateWithoutProblemsInput = {
   role?: $Enums.UserRole
   createdAt?: Date | string
   updatedAt?: Date | string
+  solvedProblems?: Prisma.ProblemSolvedUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type ProfileCreateOrConnectWithoutProblemsInput = {
@@ -507,6 +530,7 @@ export type ProfileUpdateWithoutProblemsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  solvedProblems?: Prisma.ProblemSolvedUpdateManyWithoutUserNestedInput
 }
 
 export type ProfileUncheckedUpdateWithoutProblemsInput = {
@@ -518,6 +542,69 @@ export type ProfileUncheckedUpdateWithoutProblemsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  solvedProblems?: Prisma.ProblemSolvedUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type ProfileCreateWithoutSolvedProblemsInput = {
+  supabaseUserId?: string
+  name?: string | null
+  email?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  problems?: Prisma.ProblemCreateNestedManyWithoutUserInput
+}
+
+export type ProfileUncheckedCreateWithoutSolvedProblemsInput = {
+  id?: number
+  supabaseUserId?: string
+  name?: string | null
+  email?: string | null
+  avatarUrl?: string | null
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  problems?: Prisma.ProblemUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type ProfileCreateOrConnectWithoutSolvedProblemsInput = {
+  where: Prisma.ProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProfileCreateWithoutSolvedProblemsInput, Prisma.ProfileUncheckedCreateWithoutSolvedProblemsInput>
+}
+
+export type ProfileUpsertWithoutSolvedProblemsInput = {
+  update: Prisma.XOR<Prisma.ProfileUpdateWithoutSolvedProblemsInput, Prisma.ProfileUncheckedUpdateWithoutSolvedProblemsInput>
+  create: Prisma.XOR<Prisma.ProfileCreateWithoutSolvedProblemsInput, Prisma.ProfileUncheckedCreateWithoutSolvedProblemsInput>
+  where?: Prisma.ProfileWhereInput
+}
+
+export type ProfileUpdateToOneWithWhereWithoutSolvedProblemsInput = {
+  where?: Prisma.ProfileWhereInput
+  data: Prisma.XOR<Prisma.ProfileUpdateWithoutSolvedProblemsInput, Prisma.ProfileUncheckedUpdateWithoutSolvedProblemsInput>
+}
+
+export type ProfileUpdateWithoutSolvedProblemsInput = {
+  supabaseUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  problems?: Prisma.ProblemUpdateManyWithoutUserNestedInput
+}
+
+export type ProfileUncheckedUpdateWithoutSolvedProblemsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  supabaseUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  problems?: Prisma.ProblemUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -527,10 +614,12 @@ export type ProfileUncheckedUpdateWithoutProblemsInput = {
 
 export type ProfileCountOutputType = {
   problems: number
+  solvedProblems: number
 }
 
 export type ProfileCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   problems?: boolean | ProfileCountOutputTypeCountProblemsArgs
+  solvedProblems?: boolean | ProfileCountOutputTypeCountSolvedProblemsArgs
 }
 
 /**
@@ -550,6 +639,13 @@ export type ProfileCountOutputTypeCountProblemsArgs<ExtArgs extends runtime.Type
   where?: Prisma.ProblemWhereInput
 }
 
+/**
+ * ProfileCountOutputType without action
+ */
+export type ProfileCountOutputTypeCountSolvedProblemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProblemSolvedWhereInput
+}
+
 
 export type ProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -561,6 +657,7 @@ export type ProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdAt?: boolean
   updatedAt?: boolean
   problems?: boolean | Prisma.Profile$problemsArgs<ExtArgs>
+  solvedProblems?: boolean | Prisma.Profile$solvedProblemsArgs<ExtArgs>
   _count?: boolean | Prisma.ProfileCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["profile"]>
 
@@ -600,6 +697,7 @@ export type ProfileSelectScalar = {
 export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "supabaseUserId" | "name" | "email" | "avatarUrl" | "role" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
 export type ProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   problems?: boolean | Prisma.Profile$problemsArgs<ExtArgs>
+  solvedProblems?: boolean | Prisma.Profile$solvedProblemsArgs<ExtArgs>
   _count?: boolean | Prisma.ProfileCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProfileIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -609,6 +707,7 @@ export type $ProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "Profile"
   objects: {
     problems: Prisma.$ProblemPayload<ExtArgs>[]
+    solvedProblems: Prisma.$ProblemSolvedPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1014,6 +1113,7 @@ readonly fields: ProfileFieldRefs;
 export interface Prisma__ProfileClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   problems<T extends Prisma.Profile$problemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Profile$problemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProblemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  solvedProblems<T extends Prisma.Profile$solvedProblemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Profile$solvedProblemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProblemSolvedPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1460,6 +1560,30 @@ export type Profile$problemsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.ProblemScalarFieldEnum | Prisma.ProblemScalarFieldEnum[]
+}
+
+/**
+ * Profile.solvedProblems
+ */
+export type Profile$solvedProblemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProblemSolved
+   */
+  select?: Prisma.ProblemSolvedSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProblemSolved
+   */
+  omit?: Prisma.ProblemSolvedOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProblemSolvedInclude<ExtArgs> | null
+  where?: Prisma.ProblemSolvedWhereInput
+  orderBy?: Prisma.ProblemSolvedOrderByWithRelationInput | Prisma.ProblemSolvedOrderByWithRelationInput[]
+  cursor?: Prisma.ProblemSolvedWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProblemSolvedScalarFieldEnum | Prisma.ProblemSolvedScalarFieldEnum[]
 }
 
 /**
