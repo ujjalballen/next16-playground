@@ -46,10 +46,11 @@ import { ModeToggle } from "@/components/ui/mode-toggle";
 import { getJudge0LanguageId } from "@/lib/judge0";
 import { toast } from "sonner";
 import Link from "next/link";
-import { executeCode, getProblemById } from "@/modules/problems/actions";
+import { executeCode, getAllSubmissionByCurrentUserForProblem, getProblemById } from "@/modules/problems/actions";
 import { se } from "date-fns/locale";
 import { SubmissionDetails } from "@/modules/problems/components/submission-details";
 import { TestCaseTable } from "@/modules/problems/components/test-case-table";
+import { SubmissionHistory } from "@/modules/problems/components/submission-history";
 
 
 const getDifficultyColor = (difficulty) => {
@@ -108,6 +109,26 @@ export default function ProblemIdPage({ params }) {
             // setCode(problem.codeSnippets[selectedLanguage]);
         }
     }, [selectedLanguage, problem]);
+
+
+    useEffect(() => {
+        const fetchSubmissionHistory = async () => {
+            try {
+                const resolvedParams = await params;
+                const submissionHistory = await getAllSubmissionByCurrentUserForProblem(resolvedParams.id);
+
+                if (submissionHistory.success) {
+                    setSubmissionHistory(submissionHistory.data)
+                }
+
+            } catch (error) {
+                console.error("Error fetching problem: ", error)
+            }
+        };
+
+        fetchSubmissionHistory();
+    }, [params])
+
 
     const handleRun = async () => {
         try {
@@ -269,7 +290,7 @@ export default function ProblemIdPage({ params }) {
                                     <TabsContent value="submissions" className="p-6">
                                         <div className="text-center py-8 text-muted-foreground">
                                             <p>Submission History</p>
-                                            {/* <SubmissionHistory submissions={submissionHistory} /> */}
+                                            <SubmissionHistory submissions={submissionHistory} />
                                         </div>
                                     </TabsContent>
                                     <TabsContent value="editorial" className="p-6">

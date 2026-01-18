@@ -226,3 +226,36 @@ export async function executeCode({ source_code, language_id, stdin, expected_ou
         }
     }
 }
+
+
+export async function getAllSubmissionByCurrentUserForProblem(problemId) {
+    try {
+
+        const user = await currentUser();
+
+        const dbUser = await database.profile.findUnique({
+            where: {
+                supabaseUserId: user.id
+            },
+            select: {
+                id: true
+            }
+        });
+
+        const submissions = await database.submission.findMany({
+            where: {
+                problemId: problemId,
+                userId: dbUser.id
+            },
+        });
+
+        return { success: true, data: submissions }
+
+    } catch (error) {
+        console.error("Error to getAllSubmissionByCurrentUserForProblem: ", error);
+        return {
+            success: false,
+            error: error.message || "Faild to getAllSubmissionByCurrentUserForProblem"
+        }
+    }
+}
