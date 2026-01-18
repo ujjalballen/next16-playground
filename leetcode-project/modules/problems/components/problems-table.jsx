@@ -33,6 +33,8 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { deleteProblem } from "../actions";
+import CreatePlaylistModal from "./create-playlist";
+import AddToPlaylistModal from "./add-to-playlist";
 
 
 export function ProblemsTable({ problems, user }) {
@@ -124,6 +126,69 @@ export function ProblemsTable({ problems, user }) {
         }
     }
 
+
+    const handleCreatePlaylist = async (data) => {
+        try {
+
+            const response = await fetch("/api/problems", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: data.name,
+                    description: data.description
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                setIsCreateModalOpen(false);
+                toast.success("Playlist created successfully")
+            } else {
+                // throw new Error is not a good practice
+                // it can break your app in production
+
+                // instead we show a toast
+
+                throw new Error(result.error)
+            }
+
+
+        } catch (error) {
+            console.error("Error creating playlist:", error);
+            toast.error(error.message || "Failed to create playlist");
+        }
+    }
+
+    const handleAddToPlaylist = async (problemId, playlistId) => {
+        try {
+            const response = await fetch("/api/problems/add-problems", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    problemId,
+                    playlistId
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                setIsAddToPlaylistModalOpen(false);
+                toast.success("Problem added to playlist");
+            } else {
+                throw new Error(result.error);
+            }
+
+        } catch (error) {
+            console.error("Error adding to playlist:", error);
+            toast.error(error.message || "Failed to add problem to playlist");
+        }
+    }
 
 
 
@@ -340,7 +405,19 @@ export function ProblemsTable({ problems, user }) {
             )}
 
             {/* Modals */}
+            {/* Modals */}
+            <CreatePlaylistModal
+                isOpen={isCreateModalOpen}
+                onClose={() => setIsCreateModalOpen(false)}
+                onSubmit={handleCreatePlaylist}
+            />
 
+            <AddToPlaylistModal
+                isOpen={isAddToPlaylistModalOpen}
+                onClose={() => setIsAddToPlaylistModalOpen(false)}
+                onSubmit={handleAddToPlaylist}
+                problemId={selectedProblemId}
+            />
         </div>
     );
 }
