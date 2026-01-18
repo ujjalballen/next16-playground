@@ -46,8 +46,10 @@ import { ModeToggle } from "@/components/ui/mode-toggle";
 import { getJudge0LanguageId } from "@/lib/judge0";
 import { toast } from "sonner";
 import Link from "next/link";
-import { getProblemById } from "@/modules/problems/actions";
+import { executeCode, getProblemById } from "@/modules/problems/actions";
 import { se } from "date-fns/locale";
+import { SubmissionDetails } from "@/modules/problems/components/submission-details";
+import { TestCaseTable } from "@/modules/problems/components/test-case-table";
 
 
 const getDifficultyColor = (difficulty) => {
@@ -107,7 +109,27 @@ export default function ProblemIdPage({ params }) {
         }
     }, [selectedLanguage, problem]);
 
-    const handleRun = () => { };
+    const handleRun = async () => {
+        try {
+            setIsRunning(true);
+            const language_id = getJudge0LanguageId(selectedLanguage);
+            const stdin = problem.map((tr) => tr.input);
+            const expected_outputs = problem.testCases.map((tc) => tc.output);
+            const res = await executeCode({ code, language_id, stdin, expected_outputs, problemId: problem.id })
+
+            setExecutionResponse(res);
+
+            if (res.success) {
+                toast.success(res.message)
+            }
+
+        } catch (error) {
+            console.error("Error to handleRun: ", error);
+            toast.error(error.message || "Faild to run handleRun")
+        } finally {
+            setIsRunning(false);
+        }
+    };
 
     const handleSubmit = () => {
 
@@ -378,8 +400,16 @@ export default function ProblemIdPage({ params }) {
                                 </ScrollArea>
                             </CardContent>
                         </Card>
-                    </div>
 
+                        {/* Test Results and Submission Details */}
+                        {executionResponse && executionResponse.submission && (
+                            <div className="space-y-4 mt-4">
+                                <SubmissionDetails submission={executionResponse.submission} />
+                                <TestCaseTable testCases={executionResponse.submission.testCases} />
+                            </div>
+                        )}
+
+                    </div>
 
                 </div>
             </div>

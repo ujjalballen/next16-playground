@@ -29,6 +29,7 @@ model Profile {
   updatedAt      DateTime        @updatedAt
   problems       Problem[]
   solvedProblems ProblemSolved[]
+  submissions    Submission[]
 
   @@index([role])
 }
@@ -52,6 +53,7 @@ model Problem {
   updatedAt          DateTime        @updatedAt
   createdAt          DateTime        @default(now())
   user               Profile         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  submissions        Submission[]
   solvedBy           ProblemSolved[]
 
   @@index([difficulty])
@@ -65,4 +67,44 @@ model ProblemSolved {
 
   user    Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
   problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+}
+
+model Submission {
+  id            String           @id @default(uuid())
+  userId        Int
+  problemId     String
+  sourceCode    Json
+  language      String
+  stdin         String?
+  stdout        String?
+  stderr        String?
+  compileOutput String?
+  status        String
+  memory        String?
+  time          String?
+  createdAt     DateTime         @default(now())
+  testCases     TestCaseResult[]
+
+  user    Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+}
+
+model TestCaseResult {
+  id            String     @id @default(uuid())
+  submissionId  String
+  testCase      String
+  passed        Boolean
+  stdout        String?
+  expected      String
+  stdeer        String
+  compileOutput String?
+  status        String
+  memory        String?
+  time          String?
+  createdAt     DateTime   @default(now())
+  submission    Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@index([submissionId])
 }
